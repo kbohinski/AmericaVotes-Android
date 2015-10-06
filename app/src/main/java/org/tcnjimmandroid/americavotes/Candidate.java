@@ -38,6 +38,7 @@ public class Candidate {
     int voteCount;
     int photoId;
     String color;
+    String voteAPIString = "http://www.justindilks.com/vote.php?candidate=";
 
     /**
      * Constructor: Creates a new Candidate object based on the given input
@@ -50,14 +51,24 @@ public class Candidate {
      */
     Candidate(String name, String party, int voteCount, int photoId) {
         this.name = name;
-        this.party = party;
         this.voteCount = voteCount;
         this.photoId = photoId;
         if (party.toLowerCase().equals("red") || party.toLowerCase().equals("republican")) {
             color = "#B71C1C";
+            this.party = "Republican";
         } else if (party.toLowerCase().equals("blue") || party.toLowerCase().equals("democrat")) {
             color = "#1A237E";
+            this.party = "Democrat";
         }
+        String nameNoSpace = "";
+        for (char c : name.toCharArray()) {
+            if (c == ' ') {
+                nameNoSpace += "%20";
+            } else {
+                nameNoSpace += c;
+            }
+        }
+        voteAPIString += nameNoSpace;
     }
 
 } /* Candidate.java */

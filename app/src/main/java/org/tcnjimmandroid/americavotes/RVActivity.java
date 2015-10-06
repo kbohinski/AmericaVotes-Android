@@ -19,18 +19,30 @@
 package org.tcnjimmandroid.americavotes;
 
 /* Setting Imports */
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RVActivity extends Activity {
 
+    /* Declaring Global Vars */
     private List<Candidate> candidates;
     private RecyclerView rView;
+    String data = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +62,36 @@ public class RVActivity extends Activity {
 
     private void initData() {
         candidates = new ArrayList<>();
-        candidates.add(new Candidate("Eirik Grieve", "red", 68, 0));
-        candidates.add(new Candidate("Jehosephat Armonni", "blue", 73, 1));
-        candidates.add(new Candidate("Reinier Samson", "red", 98, 2));
-        candidates.add(new Candidate("Socrates Haydene", "blue", 101, 3));
+        String url = "http://www.justindilks.com/candidates.json";
+
+        StringRequest candidateReq = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.w("HTTP Req", response);
+                        data = response;
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.w("HTTP Req", "Err");
+            }
+        }
+        );
+        Volley.newRequestQueue(this).add(candidateReq);
+
+        try {
+            JSONArray json = new JSONArray(data);
+            for (int i = 0; i < json.length(); i++) {
+                String name = json.getJSONObject(i).get("name").toString();
+                String party = json.getJSONObject(i).get("party").toString();
+                int votes = Integer.parseInt(json.getJSONObject(i).get("votes").toString());
+                Candidate tmp = new Candidate(name, party, votes, i);
+                candidates.add(tmp);
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private void initAdapter() {

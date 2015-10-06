@@ -19,6 +19,8 @@
 package org.tcnjimmandroid.americavotes;
 
 /* Setting Imports */
+
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,6 +73,11 @@ public class CandidatesAdapter extends RecyclerView.Adapter<CandidatesAdapter.Ca
     @Override
     public void onBindViewHolder(CandidateViewHolder candidateViewHolder, int i) {
         candidateViewHolder.name.setText(candidates.get(i).name);
+        if (candidates.get(i).party.equals("Republican")) {
+            candidateViewHolder.name.setTextColor(Color.parseColor("#B71C1C"));
+        } else if (candidates.get(i).party.equals("Democrat")) {
+            candidateViewHolder.name.setTextColor(Color.parseColor("#1A237E"));
+        }
         candidateViewHolder.votes.setText("" + candidates.get(i).party + "  |  Votes: " + Integer.toString(candidates.get(i).voteCount));
         candidateViewHolder.pic.setImageResource(candidates.get(i).photoId);
     }
