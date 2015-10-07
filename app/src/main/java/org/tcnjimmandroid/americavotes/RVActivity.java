@@ -32,8 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +68,19 @@ public class RVActivity extends Activity {
                     public void onResponse(String response) {
                         Log.w("HTTP Req", response);
                         data = response;
+                        /*try {
+                            JSONArray json = new JSONArray(data);
+                            for (int i = 0; i < json.length(); i++) {
+                                String name = json.getJSONObject(i).get("name").toString();
+                                String party = json.getJSONObject(i).get("party").toString();
+                                int votes = Integer.parseInt(json.getJSONObject(i).get("votes").toString());
+                                Candidate tmp = new Candidate(name, party, votes, i);
+                                candidates.add(tmp);
+                            }
+                            getWindow().getDecorView().findViewById(android.R.id.content).invalidate();
+                        } catch (Exception e) {
+
+                        }*/
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -80,18 +91,10 @@ public class RVActivity extends Activity {
         );
         Volley.newRequestQueue(this).add(candidateReq);
 
-        try {
-            JSONArray json = new JSONArray(data);
-            for (int i = 0; i < json.length(); i++) {
-                String name = json.getJSONObject(i).get("name").toString();
-                String party = json.getJSONObject(i).get("party").toString();
-                int votes = Integer.parseInt(json.getJSONObject(i).get("votes").toString());
-                Candidate tmp = new Candidate(name, party, votes, i);
-                candidates.add(tmp);
-            }
-        } catch (Exception e) {
-
-        }
+        candidates.add(new Candidate("Eirik Grieve", "red", 68, 0));
+        candidates.add(new Candidate("Jehosephat Armonni", "blue", 73, 0));
+        candidates.add(new Candidate("Reinier Samson", "red", 98, 0));
+        candidates.add(new Candidate("Socrates Haydene", "blue", 101, 0));
     }
 
     private void initAdapter() {

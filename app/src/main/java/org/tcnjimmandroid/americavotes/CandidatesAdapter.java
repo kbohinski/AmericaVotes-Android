@@ -30,6 +30,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import java.util.List;
 
 public class CandidatesAdapter extends RecyclerView.Adapter<CandidatesAdapter.CandidateViewHolder> {
@@ -71,7 +76,7 @@ public class CandidatesAdapter extends RecyclerView.Adapter<CandidatesAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(CandidateViewHolder candidateViewHolder, int i) {
+    public void onBindViewHolder(final CandidateViewHolder candidateViewHolder, final int i) {
         candidateViewHolder.name.setText(candidates.get(i).name);
         if (candidates.get(i).party.equals("Republican")) {
             candidateViewHolder.name.setTextColor(Color.parseColor("#B71C1C"));
@@ -79,7 +84,28 @@ public class CandidatesAdapter extends RecyclerView.Adapter<CandidatesAdapter.Ca
             candidateViewHolder.name.setTextColor(Color.parseColor("#1A237E"));
         }
         candidateViewHolder.votes.setText("" + candidates.get(i).party + "  |  Votes: " + Integer.toString(candidates.get(i).voteCount));
-        candidateViewHolder.pic.setImageResource(candidates.get(i).photoId);
+        candidateViewHolder.pic.setImageResource(R.drawable.emma);
+        candidateViewHolder.pic.getLayoutParams().width = 200;
+        candidateViewHolder.pic.requestLayout();
+        candidateViewHolder.vote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendVote(candidates.get(i).voteAPIString);
+            }
+        });
+    }
+
+    public void sendVote(String url) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
     }
 
     @Override
